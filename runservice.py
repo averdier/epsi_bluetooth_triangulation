@@ -25,54 +25,6 @@ def show_sondes():
     print(json.dumps(sondes, indent=4))
 
 
-def get_sondes_where_is_device(device):
-    founded_sondes = []
-
-    for sonde in sondes:
-        for device in sondes[sonde]['devices']:
-            if device['mac'] == device['mac']:
-
-                sonde_already_exist = False
-
-                for s in founded_sondes:
-                    if s.get(sonde, None) is not None:
-                        sonde_already_exist = True
-
-                if not sonde_already_exist:
-                    founded_sondes.append({
-                        sonde: {
-                            'start_timestamp': sondes[sonde]['start_timestamp'],
-                            'end_timestamp': sondes[sonde]['end_timestamp'],
-                            'rssi': device['rssi']
-                        }
-                    })
-
-    return founded_sondes
-
-
-def get_intersect_sondes(founded_sondes):
-    inserect_sondes = []
-
-    for sonde in founded_sondes:
-        for s2 in founded_sondes:
-            pass
-
-
-def get_candidates_devices():
-    candidates = {}
-
-    for sonde in sondes:
-        for device in sondes[sonde]['devices']:
-
-            if candidates.get(device['mac'], None) is None:
-                founded_sondes = get_sondes_where_is_device(device)
-
-                if len(founded_sondes) >= 3:
-                    candidates[device['mac']] = founded_sondes
-
-    return candidates
-
-
 def on_connect(client, userdata, flags, rc):
     print('Connection result code: ' + str(rc))
 
@@ -98,11 +50,6 @@ def on_message(client, userdata, msg):
     elif msg.topic == topics[2]:
         data = json.loads(msg.payload.decode('utf-8'))
         sondes['device_03'] = data
-
-    candidates = get_candidates_devices()
-
-    print('Candidates')
-    print(json.dumps(candidates, 4))
 
 
 if __name__ == '__main__':
