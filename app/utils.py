@@ -59,17 +59,18 @@ def group_data_by_match_interval(sensor_datas, threshold=5):
         same_group = True
         for second_group in temp_groups:
 
-            if len(first_group) != len(second_group):
-                same_group = False
-                break
-
-            for i in range(0, len(first_group)):
-                if first_group[i] != second_group[i]:
+            if first_group != second_group:
+                if len(first_group) != len(second_group):
                     same_group = False
                     break
 
-            if not same_group:
-                break
+                for i in range(0, len(first_group)):
+                    if first_group[i] != second_group[i]:
+                        same_group = False
+                        break
+
+                if not same_group:
+                    break
 
         if not same_group:
             groups.append(first_group)

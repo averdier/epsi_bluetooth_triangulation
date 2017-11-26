@@ -45,6 +45,8 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
 
+    print(msg.topic)
+
     topic_parts = msg.topic.split('/')
 
     if len(topic_parts) == 3 and sensors.get(topic_parts[1], None) is not None and topic_parts[2] == 'from_device':

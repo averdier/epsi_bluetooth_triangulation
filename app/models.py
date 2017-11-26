@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 
 
 class Sensor:
@@ -27,14 +28,19 @@ class Sensor:
 
     def update(self, update_data):
         self._data = []
-        for device in update_data['devices']:
-            self._data.append(SensorData(
-                self,
-                update_data['start_timestamp'],
-                update_data['end_timestamp'],
-                device['mac'],
-                device['rssi']
-            ))
+        try:
+            data = json.loads(update_data)
+            print(update_data)
+            for device in data['devices']:
+                self._data.append(SensorData(
+                    self,
+                    data['start_timestamp'],
+                    data['end_timestamp'],
+                    device['mac'],
+                    device['rssi']
+                ))
+        except Exception as ex:
+            print(ex)
 
     def __eq__(self, other):
         return self.name == other.name
@@ -50,7 +56,7 @@ class SensorData:
         self._rssi = rssi
 
     @property
-    def sensor(self): return self.sensor
+    def sensor(self): return self._sensor
 
     @property
     def start_timestamp(self): return self._start_timestamp
