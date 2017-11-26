@@ -6,14 +6,7 @@ def get_devices_with_sensors(sensors):
     """
     Get devices with sensors data
 
-    :param sensors: Dict of sensors
-    {
-        name: {
-            start_timestamp
-            end_timestamp
-            devices
-        }
-    }
+    :param sensors: List of sensors
 
     :return: Dict of devices with sensors data
     {
@@ -22,26 +15,19 @@ def get_devices_with_sensors(sensors):
     """
     devices = {}
 
-    for sensor_name in sensors:
-        for device in sensors[sensor_name]['devices']:
+    for sensor in sensors:
+        for data in sensor.data:
 
-            sensor_data = SensorData(
-                sensor_name,
-                sensors[sensor_name]['start_timestamp'],
-                sensors[sensor_name]['end_timestamp'],
-                device['rssi']
-            )
+            if data.device_address not in devices:
+                devices[data.device_address] = [data]
 
-            if device['mac'] not in devices:
-                devices[device['mac']] = [sensor_data]
-
-            elif sensor_data not in devices[device['mac']]:
-                devices[device['mac']].append(sensor_data)
+            elif data not in devices[data.device_address]:
+                devices[data.device_address].append(data)
 
     return devices
 
 
-def group_data_by_match_interval(sensor_datas, threshold = 5):
+def group_data_by_match_interval(sensor_datas, threshold=5):
     """
     Group list of SensorData by match interval
 
@@ -82,7 +68,7 @@ def group_data_by_match_interval(sensor_datas, threshold = 5):
                     same_group = False
                     break
 
-            if not second_group:
+            if not same_group:
                 break
 
         if not same_group:
